@@ -1,0 +1,99 @@
+Session-
+HTML code-
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+	<title>Insert title here</title>
+	<link rel="stylesheet" 	href="https://cdn.jsdelivr.net/npm/bootstrap@	4.0.0/dist/css/bootstrap.min.css" integrity="sha384-	Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">	
+</head>
+<body>
+	<div class="Container">
+		<div class="row">
+			<form action="login" method="post">
+				<div class="from-group">
+					<label style="margin-right: 200px">User Name</label>
+					<input type="text" id="uname" name="uname" placeholder="user name" class="form-control">
+				</div>
+				<div class="from-group">
+					<label>Password</label>
+					<input type="password" id="pass" name="pass" placeholder="password" class="form-control">
+				</div>
+				<div class="from-group">
+					<input type="submit" value="submit" class="btn btn-success">
+				</div>
+			</form>
+		</div>		
+	</div>
+
+</body>
+</html>
+
+Servlet file 1- 
+package login;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ * Servlet implementation class login
+ */
+@WebServlet("/login")
+public class login extends HttpServlet {
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+		PrintWriter out = response.getWriter();
+		String uname = request.getParameter("uname");
+		String pass = request.getParameter("pass");
+		if(uname.equals("john") && pass.equals("123"))
+		{
+			HttpSession session = request.getSession(true);
+			session.putValue("username", uname);
+			
+			response.sendRedirect(request.getContextPath()+ "/Second");
+		}
+		else
+		{
+			out.println("Failed");
+		}
+	}
+
+}
+ 
+Servlet file 2-
+package login;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ * Servlet implementation class login
+ */
+@WebServlet("/login")
+public class Second extends HttpServlet {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession(true);
+		
+		String uname = (String)session.getValue("username");
+		out.println("Username is " + uname);
+	}
+
+}
